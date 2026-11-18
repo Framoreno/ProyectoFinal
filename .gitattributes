@@ -1,0 +1,14 @@
+# Normaliza finales de línea: evita trabas entre Windows (usuario) y Linux/Mac (compañeros)
+* text=auto eol=lf
+
+# Scripts del Maven Wrapper: respetar el fin de línea propio de cada plataforma
+mvnw.cmd text eol=crlf
+mvnw      text eol=lf
+
+# Archivos binarios: no tocar
+*.jar   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary

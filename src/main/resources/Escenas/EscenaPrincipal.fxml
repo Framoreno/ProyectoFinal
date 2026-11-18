@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ud.Controlador.EscenaPrincipalController">
+   <children>
+      <Text fx:id="Titulo" layoutX="255.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Texto De Prueba" wrappingWidth="89.55078125" />
+      <Button fx:id="Iniciar" layoutX="248.0" layoutY="251.0" mnemonicParsing="false" onAction="#click" text="Boton de Prueba" />
+   </children>
+</AnchorPane>
