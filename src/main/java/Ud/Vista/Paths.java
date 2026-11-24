@@ -9,13 +9,13 @@ public class Paths {
     public static final String ESCENA_JUEGO = "/Escenas/Juego.fxml";
 
     // Sprites. Los archivos .jfif son imagenes JPEG y JavaFX los carga igual.
-    public static final String SPRITE_LUPIN = "/Sprites/Lupin.jfif";
-    public static final String SPRITE_TESORO = "/Sprites/Tesoro.jfif";
-    public static final String SPRITE_LLAVE = "/Sprites/llave.jfif";
-    public static final String SPRITE_VIGILANTE = "/Sprites/Policia.jfif";
-    public static final String[] SPRITE_PERROS = {
-            "/Sprites/perro1.jfif",
-            "/Sprites/perro2.jfif",
-            "/Sprites/perro3.jfif"
-    };
+public static final String SPRITE_LUPIN = "/Sprites/Lupinfinal.jpg";
+public static final String SPRITE_TESORO = "/Sprites/Tesorofinal.jpg";
+public static final String SPRITE_LLAVE = "/Sprites/Llavefinal.jpg";
+public static final String SPRITE_VIGILANTE = "/Sprites/Policiafinal.jpg";
+public static final String[] SPRITE_PERROS = {
+    "/Sprites/Perro1final.jpg",
+    "/Sprites/Perro2final.jpg",
+    "/Sprites/Perro3final.jpg"
+};
 }

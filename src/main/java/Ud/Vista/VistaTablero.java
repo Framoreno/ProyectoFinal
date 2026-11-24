@@ -49,6 +49,7 @@ public class VistaTablero extends GridPane {
      * casilla. Sirve para cualquier sprite (Lupin, tesoro, etc.).
      */
     private ImageView crearSprite(String ruta) {
+    System.out.println("Cargando: [" + ruta + "] -> " + getClass().getResource(ruta));        
         Image imagen = new Image(getClass().getResourceAsStream(ruta));
         ImageView vista = new ImageView(imagen);
         vista.setFitWidth(TAMANO_CASILLA);
