@@ -12,7 +12,7 @@ package Ud.Modelo;
  */
 public abstract class Personaje implements Posicionable {
 
-    private char simbolo;
+    private final char simbolo;
     private int fila;
     private int columna;
 
@@ -35,37 +35,12 @@ public abstract class Personaje implements Posicionable {
     @Override
     public int getColumna() {
         return columna;
-    }
-
-    protected void setFila(int fila) {
-        this.fila = fila;
-    }
-
-    protected void setColumna(int columna) {
-        this.columna = columna;
-    }
-
-    /**
-     * Cada subclase decide como se mueve (el jugador con el teclado, los perros
-     * al azar, el vigilante persiguiendo). Por ahora solo lo usa Lupin.
-     */
-    public abstract void evaluarMovimiento(Tablero tablero, Direccion direccion);
-
-    /**
-     * Mueve el personaje en una direccion solo si la casilla destino es
-     * transitable: dentro del tablero y que no sea una pared. Si no, se queda
-     * quieto.
-     */
-    protected void moverDentroDe(Tablero tablero, Direccion direccion) {
-        int nuevaFila = fila + direccion.getDeltaFila();
-        int nuevaColumna = columna + direccion.getDeltaColumna();
-        if (tablero.esTransitable(nuevaFila, nuevaColumna)) {
-            this.fila = nuevaFila;
-            this.columna = nuevaColumna;
-        }
-    }
-
-    /**
+    } /**
+ * Cada subclase decide como se mueve: Lupin segun la tecla del jugador, el
+ * perro al azar (ignora la direccion) y el vigilante persiguiendo con su
+ * propio metodo perseguir(), por lo que aqui no hace nada.
+ */
+    public abstract void evaluarMovimiento(Tablero tablero, Direccion direccion); /**
      * Coloca el personaje en una casilla concreta. Lo usan las subclases que
      * validan el destino con su propia regla (por ejemplo el perro, que no
      * puede pisar la puerta ni las llaves).

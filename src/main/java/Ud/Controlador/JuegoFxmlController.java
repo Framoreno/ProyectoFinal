@@ -21,9 +21,8 @@ import java.util.Optional;
  * tablero) con el modelo y la vista:
  *   - mete la grilla del tablero (VistaTablero) dentro del contenedor;
  *   - muestra el texto de las vidas y lo actualiza cuando cambian;
- *   - delega el teclado y los relojes de los perros en ControladorJuego;
- *   - como ObservadorJuego, muestra la alerta cuando atrapan a Lupin y el
- *     mensaje de fin de juego.
+ *   - delega el teclado y los relojes en ControladorJuego;
+ *   - como ObservadorJuego, muestra la alerta cuando atrapan a Lupin y los mensajes de fin de juego y de victoria, y guarda el resultado.
  */
 public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
 
@@ -72,13 +71,13 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
     }
 
     /**
-     * Arranca la parte de juego (teclado + perros) una vez la escena existe.
+     * Arranca la parte de juego (teclado, perros y vigilante) una vez la escena existe.
      */
     public void iniciar(Scene escena) {
         controladorJuego.iniciar(escena);
     }
 
-    /** Detiene los relojes de los perros (al cerrar la ventana). */
+    /** Detiene los relojes (al cerrar la ventana). */
     public void detener() {
         if (controladorJuego != null) {
             controladorJuego.detener();
