@@ -19,22 +19,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Vista del juego (capa Vista del patron MVC).
- *
- * Unica responsabilidad: DIBUJAR el estado del modelo en pantalla. Pinta la
- * grilla del tablero y coloca el sprite de Lupin en su casilla. No lee el
- * teclado ni cambia posiciones; eso es tarea del Controlador. Asi la vista se
- * puede cambiar (otros colores, otro tamano) sin tocar el modelo.
+ * vista del juego
+ * dibujar el estado del modelo en pantalla
  */
 public class VistaTablero extends GridPane {
 
-    /** Lado de cada casilla en pixeles. */
     public static final int TAMANO_CASILLA = 48;
 
     private final Tablero tablero;
     private final ImageView spriteLupin;
     private final List<ImageView> spritesPerros = new ArrayList<>();
-    private ImageView spriteVigilante;
+    private final List<ImageView> spritesVigilantes = new ArrayList<>();
     private final Map<Llave, ImageView> spritesLlaves = new HashMap<>();
 
     public VistaTablero(Tablero tablero) {
@@ -44,10 +39,7 @@ public class VistaTablero extends GridPane {
         dibujarTesoro();
     }
 
-    /**
-     * Carga una imagen de resources/Sprites y la ajusta al tamano de una
-     * casilla. Sirve para cualquier sprite (Lupin, tesoro, etc.).
-     */
+
     private ImageView crearSprite(String ruta) {
     System.out.println("Cargando: [" + ruta + "] -> " + getClass().getResource(ruta));        
         Image imagen = new Image(getClass().getResourceAsStream(ruta));
@@ -58,18 +50,12 @@ public class VistaTablero extends GridPane {
         return vista;
     }
 
-    // Colores de cada tipo de casilla.
-    private static final Color COLOR_PARED = Color.web("#6b4226");  // cafe
-    private static final Color COLOR_PUERTA = Color.web("#c9a227"); // dorado
+    private static final Color COLOR_PARED = Color.web("#6b4226");
+    private static final Color COLOR_PUERTA = Color.web("#c9a227");
     private static final Color COLOR_LIBRE_CLARA = Color.web("#3b3b55");
     private static final Color COLOR_LIBRE_OSCURA = Color.web("#2a2a3d");
 
-    /**
-     * Pinta el fondo de la grilla: una casilla por cada fila y columna,
-     * con un color segun su tipo. Las paredes van en cafe, la puerta en
-     * dorado, el tesoro en verde, y las casillas libres en dos tonos
-     * alternados tipo tablero de ajedrez.
-     */
+
     private void dibujarGrilla() {
         for (int fila = 0; fila < tablero.getFilas(); fila++) {
             for (int columna = 0; columna < tablero.getColumnas(); columna++) {
@@ -81,11 +67,6 @@ public class VistaTablero extends GridPane {
         }
     }
 
-    /**
-     * Devuelve el color de fondo de la casilla segun su tipo. La casilla del
-     * tesoro se pinta como suelo libre, porque es transitable y encima lleva
-     * su sprite.
-     */
     private Color colorDe(int fila, int columna) {
         TipoCasilla tipo = tablero.getTipo(fila, columna);
         return switch (tipo) {
@@ -96,10 +77,6 @@ public class VistaTablero extends GridPane {
         };
     }
 
-    /**
-     * Busca la casilla del tesoro en el tablero y coloca ahi su sprite.
-     * El tesoro es parte del mapa (fijo), asi que se dibuja una sola vez.
-     */
     private void dibujarTesoro() {
         for (int fila = 0; fila < tablero.getFilas(); fila++) {
             for (int columna = 0; columna < tablero.getColumnas(); columna++) {
@@ -112,20 +89,11 @@ public class VistaTablero extends GridPane {
         }
     }
 
-    /**
-     * Coloca (o recoloca) el sprite de Lupin en la casilla donde esta ahora
-     * segun el modelo. El controlador llama a este metodo cada vez que Lupin
-     * se mueve.
-     */
     public void dibujarLupin(Lupin lupin) {
         getChildren().remove(spriteLupin);
         add(spriteLupin, lupin.getColumna(), lupin.getFila());
     }
 
-    /**
-     * Crea un sprite para cada perro (perro1, perro2, perro3). Se llama una
-     * sola vez al preparar la vista.
-     */
     public void prepararPerros(List<Perro> perros) {
         spritesPerros.clear();
         for (int i = 0; i < perros.size(); i++) {
@@ -134,10 +102,6 @@ public class VistaTablero extends GridPane {
         }
     }
 
-    /**
-     * Coloca (o recoloca) cada perro en su casilla actual. El controlador la
-     * llama cada vez que un perro se mueve. Es segura de llamar seguido.
-     */
     public void dibujarPerros(List<Perro> perros) {
         for (int i = 0; i < perros.size(); i++) {
             ImageView sprite = spritesPerros.get(i);
@@ -147,10 +111,6 @@ public class VistaTablero extends GridPane {
         }
     }
 
-    /**
-     * Dibuja las 3 llaves en sus casillas, cada una con el sprite de llave.
-     * Guarda cada sprite para poder quitarlo cuando la llave se recoja.
-     */
     public void dibujarLlaves(List<Llave> llaves) {
         for (Llave llave : llaves) {
             ImageView sprite = crearSprite(Paths.SPRITE_LLAVE);
@@ -159,11 +119,7 @@ public class VistaTablero extends GridPane {
         }
     }
 
-    /**
-     * Quita de la pantalla los sprites de las llaves que Lupin ya recogio.
-     * Una llave esta recogida cuando su casilla dejo de ser LLAVE en el
-     * tablero (paso a LIBRE). El controlador llama a esto cuando Lupin se mueve.
-     */
+
     public void actualizarLlaves() {
         var it = spritesLlaves.entrySet().iterator();
         while (it.hasNext()) {
@@ -177,33 +133,32 @@ public class VistaTablero extends GridPane {
         }
     }
 
-    /**
-     * Crea el sprite del vigilante (policia). Se llama una sola vez.
-     */
-    public void prepararVigilante() {
-        spriteVigilante = crearSprite(Paths.SPRITE_VIGILANTE);
+
+    public void prepararVigilantes(List<Vigilante> vigilantes) {
+        spritesVigilantes.clear();
+        for (int i = 0; i < vigilantes.size(); i++) {
+            spritesVigilantes.add(crearSprite(Paths.SPRITE_VIGILANTE));
+        }
     }
 
-    /**
-     * Coloca (o recoloca) al vigilante en su casilla actual. El controlador la
-     * llama cuando el vigilante se mueve.
-     */
-    public void dibujarVigilante(Vigilante vigilante) {
-        getChildren().remove(spriteVigilante);
-        add(spriteVigilante, vigilante.getColumna(), vigilante.getFila());
+    public void dibujarVigilantes(List<Vigilante> vigilantes) {
+        for (int i = 0; i < vigilantes.size(); i++) {
+            ImageView sprite = spritesVigilantes.get(i);
+            Vigilante v = vigilantes.get(i);
+            getChildren().remove(sprite);
+            add(sprite, v.getColumna(), v.getFila());
+        }
     }
 
-    /** Ancho total de la vista en pixeles, util para dimensionar la ventana. */
+
     public double anchoPreferido() {
         return (double) tablero.getColumnas() * TAMANO_CASILLA;
     }
 
-    /** Alto total de la vista en pixeles. */
     public double altoPreferido() {
         return (double) tablero.getFilas() * TAMANO_CASILLA;
     }
 
-    /** Marca esta region con un tamano fijo acorde al tablero. */
     public void ajustarTamano() {
         setMinSize(anchoPreferido(), altoPreferido());
         setPrefSize(anchoPreferido(), altoPreferido());

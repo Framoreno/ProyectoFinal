@@ -2,16 +2,7 @@ package Ud.Modelo;
 
 import java.util.List;
 
-/**
- * Reloj INDEPENDIENTE de un perro: es un hilo propio (concurrencia, tema del
- * proyecto). Cada perro tiene su RelojPerro con su propio periodo, por eso los
- * tres perros se mueven a tiempos distintos y de forma independiente entre si.
- *
- * El reloj solo sabe: cada cierto tiempo, mover su perro y avisar que algo
- * cambio. NO sabe dibujar (eso es de la Vista); recibe una accion
- * "alMoverse" que ejecuta tras cada paso. Asi cumple responsabilidad unica y
- * no depende de JavaFX (SOLID).
- */
+
 public class RelojPerro implements Runnable {
 
   
@@ -40,14 +31,12 @@ public class RelojPerro implements Runnable {
         this.alMoverse = alMoverse;
     }
 
-    /** Arranca el hilo de este reloj. */
     public void iniciar() {
         hilo = new Thread(this, "reloj-perro");
         hilo.setDaemon(true); 
         hilo.start();
     }
 
-    /** Detiene el reloj de forma ordenada. */
     public void detener() {
         activo = false;
         if (hilo != null) {
@@ -64,8 +53,7 @@ public class RelojPerro implements Runnable {
                 Thread.currentThread().interrupt();
                 return;
             }
-            // Un paso por vez entre todos los perros: evita carreras al leer y
-            // escribir posiciones desde hilos distintos.
+
             synchronized (candado) {
                 perro.moverAlAzar(tablero, todosLosPerros);
             }

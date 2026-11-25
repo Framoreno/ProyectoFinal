@@ -1,11 +1,6 @@
 package Ud.Modelo;
 
-/**
- * Clase Tablero : conoce su tamano en filas y
- * columnas, y  de que tipo es cada casilla (libre, pared, puerta
- * o tesoro).
 
- */
 public class Tablero {
 
     private final int filas;
@@ -35,9 +30,7 @@ public class Tablero {
         return columnas;
     }
 
-    /**
-     * Indica si la casilla (fila, columna) cae dentro del tablero.
-     */
+
     public boolean estaDentro(int fila, int columna) {
         return fila >= 0 && fila < filas
                 && columna >= 0 && columna < columnas;
@@ -51,20 +44,12 @@ public class Tablero {
         casillas[fila][columna] = tipo;
     }
 
-    /**
-     * Indica si un personaje puede pararse en esa casilla: debe estar dentro
-     * del tablero y no ser una pared.
-     */
+
     public boolean esTransitable(int fila, int columna) {
         return estaDentro(fila, columna)
                 && casillas[fila][columna].esTransitable();
     }
 
-    /**
-     * Indica si un PERRO puede pararse en esa casilla. Ademas de ser
-     * transitable, no puede ser la puerta ni una llave (regla del juego: los
-     * perros no se paran sobre la puerta ni sobre las llaves).
-     */
     public boolean esValidaParaPerro(int fila, int columna) {
         if (!esTransitable(fila, columna)) {
             return false;

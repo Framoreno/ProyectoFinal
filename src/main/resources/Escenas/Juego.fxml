@@ -5,14 +5,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.geometry.Insets?>
 
-<!--
-  Escena principal del juego, armada en FXML (patron MVC).
 
-  Arriba (top): un texto con las vidas actuales (solo visual por ahora).
-  Centro (center): un contenedor vacio llamado "contenedorTablero" donde el
-  controlador inyecta por codigo la grilla del tablero (VistaTablero), porque
-  esa grilla es dinamica y cambia en vivo.
--->
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Ud.Controlador.JuegoFxmlController"
