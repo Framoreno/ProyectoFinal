@@ -141,7 +141,7 @@ public class ControladorJuego {
         if (direccion != null) {
             synchronized (candado) {
                 juego.moverLupin(direccion);
-                juego.activarVigilanteSiCorresponde();
+                juego.activarVigilante();
             }
             vista.dibujarLupin(juego.getLupin());
             vista.actualizarLlaves();

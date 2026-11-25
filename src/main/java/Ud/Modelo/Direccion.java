@@ -1,9 +1,5 @@
 package Ud.Modelo;
 
-/**
- * Las cuatro direcciones en que un personaje puede intentar moverse.
- * Cada direccion sabe cuanto cambia la fila y la columna (delta).
- */
 public enum Direccion {
     ARRIBA(-1, 0),
     ABAJO(1, 0),
