@@ -15,31 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 public class ControladorJuego {
 
-    // Interfaz que la vista implementa para reaccionar a los eventos del juego.
     public interface ObservadorJuego {
-        // Se invoca cuando un perro atrapa al jugador; indica las vidas que le quedan.
         void alSerAtrapado(int vidasRestantes);
 
-        // Se invoca cuando la partida termina (sin vidas restantes).
         void alTerminarJuego();
 
-        // Se invoca cuando el jugador cumple la condicion de victoria.
         void alGanar();
     }
 
     private static final long[] PERIODOS_MS = {500, 800, 1200};
-    private static final long PERIODO_VIGILANTE_MS = 450;
+    private static final long PERIODO_VIGILANTE_MS = 300;
 
     private final JuegoLupin juego;
     private final VistaTablero vista;
     private final List<RelojPerro> relojes = new ArrayList<>();
-    private RelojVigilante relojVigilante;
+    private final List<RelojVigilante> relojesVigilantes = new ArrayList<>();
 
-    // Candado compartido: los pasos de los tres perros no se pisan entre si.
     private final Object candado = new Object();
 
     private ObservadorJuego observador;
-    // Evita procesar varias atrapadas a la vez (los 3 hilos podrian coincidir).
+
     private boolean procesandoAtrapada = false;
 
     public ControladorJuego(JuegoLupin juego, VistaTablero vista) {
@@ -51,32 +46,28 @@ public class ControladorJuego {
         this.observador = observador;
     }
 
-    /**
-     * Dibuja a Lupin y a los perros, empieza a escuchar el teclado y arranca
-     * el reloj independiente de cada perro.
-     */
+
     public void iniciar(Scene escena) {
         vista.dibujarLupin(juego.getLupin());
         vista.prepararPerros(juego.getPerros());
         vista.dibujarPerros(juego.getPerros());
-        vista.prepararVigilante();
-        vista.dibujarVigilante(juego.getVigilante());
+        vista.prepararVigilantes(juego.getVigilantes());
+        vista.dibujarVigilantes(juego.getVigilantes());
 
         escena.addEventHandler(KeyEvent.KEY_PRESSED, this::manejarTecla);
         arrancarRelojesPerros();
-        arrancarRelojVigilante();
+        arrancarRelojesVigilantes();
     }
 
-    /** Detiene todos los relojes (p. ej. al cerrar la ventana o al atrapar). */
     public void detener() {
         for (RelojPerro reloj : relojes) {
             reloj.detener();
         }
         relojes.clear();
-        if (relojVigilante != null) {
-            relojVigilante.detener();
-            relojVigilante = null;
+        for (RelojVigilante rv : relojesVigilantes) {
+            rv.detener();
         }
+        relojesVigilantes.clear();
     }
 
     private void arrancarRelojesPerros() {
@@ -89,8 +80,7 @@ public class ControladorJuego {
                     juego.getTablero(),
                     periodo,
                     candado,
-                    // Tras cada paso: redibujar y revisar atrapada, en el hilo
-                    // de JavaFX.
+                    // hace que la vista epere al modelo
                     () -> Platform.runLater(() -> {
                         vista.dibujarPerros(perros);
                         verificarAtrapada();
@@ -100,18 +90,21 @@ public class ControladorJuego {
         }
     }
 
-    private void arrancarRelojVigilante() {
-        relojVigilante = new RelojVigilante(
-                juego.getVigilante(),
-                juego.getLupin(),
-                juego.getTablero(),
-                PERIODO_VIGILANTE_MS,
-                candado,
-                () -> Platform.runLater(() -> {
-                    vista.dibujarVigilante(juego.getVigilante());
-                    verificarAtrapada();
-                }));
-        relojVigilante.iniciar();
+    private void arrancarRelojesVigilantes() {
+        for (var vigilante : juego.getVigilantes()) {
+            RelojVigilante rv = new RelojVigilante(
+                    vigilante,
+                    juego.getLupin(),
+                    juego.getTablero(),
+                    PERIODO_VIGILANTE_MS,
+                    candado,
+                    () -> Platform.runLater(() -> {
+                        vista.dibujarVigilantes(juego.getVigilantes());
+                        verificarAtrapada();
+                    }));
+            relojesVigilantes.add(rv);
+            rv.iniciar();
+        }
     }
 
     private void manejarTecla(KeyEvent evento) {
@@ -130,10 +123,6 @@ public class ControladorJuego {
         }
     }
 
-    /**
-     * Si Lupin llego al tesoro, gana: detiene los relojes y avisa al
-     * observador. Debe llamarse en el hilo de JavaFX. Devuelve true si gano.
-     */
     private boolean verificarVictoria() {
         if (!juego.lupinGano()) {
             return false;
@@ -145,49 +134,35 @@ public class ControladorJuego {
         return true;
     }
 
-    /**
-     * Comprueba si un perro atrapo a Lupin. Debe llamarse en el hilo de JavaFX.
-     * Si hay atrapada: detiene relojes, resta una vida y avisa al observador.
-     * El observador (la ventana) decide mostrar la alerta y luego, si quedan
-     * vidas, se reinicia y se vuelve a arrancar.
-     */
     private void verificarAtrapada() {
         if (procesandoAtrapada
                 || !(juego.perroAtrapoALupin() || juego.vigilanteAtrapoALupin())) {
             return;
         }
         procesandoAtrapada = true;
-        detener();                 // 1. detener los relojes
-        juego.aplicarAtrapada();   // 2. restar vida y reiniciar posiciones
+        detener();
+        juego.aplicarAtrapada();   // restar vida y reiniciar posiciones
 
         if (juego.juegoTerminado()) {
             if (observador != null) {
                 observador.alTerminarJuego();
             }
-            return; // no se vuelve a arrancar
+            return;
         }
 
-        // 3. redibujar YA en la posicion inicial (antes de la alerta, que
-        //    bloquea), para que al cerrar el dialogo se vea el reinicio.
         vista.dibujarLupin(juego.getLupin());
         vista.dibujarPerros(juego.getPerros());
-        vista.dibujarVigilante(juego.getVigilante());
+        vista.dibujarVigilantes(juego.getVigilantes());
 
-        // 4. avisar: muestra la alerta con las vidas restantes (bloqueante).
         if (observador != null) {
             observador.alSerAtrapado(juego.getVidas());
         }
 
-        // 5. volver a arrancar los relojes.
         procesandoAtrapada = false;
         arrancarRelojesPerros();
-        arrancarRelojVigilante();
+        arrancarRelojesVigilantes();
     }
 
-    /**
-     * Convierte una tecla en una direccion. Devuelve null si la tecla no
-     * corresponde a un movimiento.
-     */
     private Direccion traducir(KeyCode codigo) {
         return switch (codigo) {
             case UP, W -> Direccion.ARRIBA;

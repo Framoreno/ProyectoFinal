@@ -14,16 +14,6 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.util.Optional;
 
-/**
- * Controlador de la escena FXML (Juego.fxml), capa Controlador del patron MVC.
- *
- * Conecta lo que declara el FXML (el texto de vidas y el contenedor del
- * tablero) con el modelo y la vista:
- *   - mete la grilla del tablero (VistaTablero) dentro del contenedor;
- *   - muestra el texto de las vidas y lo actualiza cuando cambian;
- *   - delega el teclado y los relojes en ControladorJuego;
- *   - como ObservadorJuego, muestra la alerta cuando atrapan a Lupin y los mensajes de fin de juego y de victoria, y guarda el resultado.
- */
 public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
 
     @FXML
@@ -39,11 +29,7 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
     private final RepositorioResultados repositorio = new RepositorioResultados();
     private String nombreJugador = "Anonimo";
 
-    /**
-     * Recibe el modelo y la vista ya creados y arma la escena: pide el nombre
-     * del jugador, coloca la grilla en el contenedor, dibuja las llaves y
-     * muestra las vidas.
-     */
+
     public void configurar(JuegoLupin juego, VistaTablero vista) {
         this.juego = juego;
         this.vista = vista;
@@ -58,7 +44,7 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
         mostrarVidas();
     }
 
-    /** Pide el nombre del jugador en un dialogo al empezar. */
+
     private void pedirNombre() {
         TextInputDialog dialogo = new TextInputDialog("Jugador");
         dialogo.setTitle("Nombre del jugador");
@@ -71,25 +57,19 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
     }
 
     /**
-     * Arranca la parte de juego (teclado, perros y vigilante) una vez la escena existe.
+     * el juego arranca cuando ya existe la escena
      */
     public void iniciar(Scene escena) {
         controladorJuego.iniciar(escena);
     }
 
-    /** Detiene los relojes (al cerrar la ventana). */
     public void detener() {
         if (controladorJuego != null) {
             controladorJuego.detener();
         }
     }
 
-    // --- ObservadorJuego ---
 
-    /**
-     * Lupin fue atrapado: muestra la alerta con las vidas que quedan y refresca
-     * el texto. La alerta es bloqueante; el juego ya reinicio posiciones antes.
-     */
     @Override
     public void alSerAtrapado(int vidasRestantes) {
         mostrarVidas();
@@ -100,7 +80,6 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
         alerta.showAndWait();
     }
 
-    /** Lupin se quedo sin vidas: guarda el resultado, muestra el fin y cierra. */
     @Override
     public void alTerminarJuego() {
         mostrarVidas();

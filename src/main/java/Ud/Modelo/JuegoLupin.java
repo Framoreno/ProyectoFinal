@@ -21,14 +21,13 @@ public class JuegoLupin {
     private final Lupin lupin;
     private final List<Perro> perros;
     private final List<Llave> llaves;
-    private final Vigilante vigilante;
+    private final List<Vigilante> vigilantes;
 
     // Posiciones iniciales, para devolver a todos tras una atrapada.
     private final int lupinFilaInicial;
     private final int lupinColumnaInicial;
     private final int[][] perrosInicial;
-    private final int vigilanteFilaInicial;
-    private final int vigilanteColumnaInicial;
+    private final int[][] vigilantesInicial;
 
     public JuegoLupin() {
         this.tablero = ConstructorMapa.construir();
@@ -55,10 +54,20 @@ public class JuegoLupin {
 
         this.llaves = colocarLlavesAlAzar();
 
-        // Vigilante dentro de la boveda 2, cerca de la entrada. Empieza quieto.
-        this.vigilanteFilaInicial = ConstructorMapa.BOVEDA2_FILA_INICIAL + 1; // 3
-        this.vigilanteColumnaInicial = ConstructorMapa.BOVEDA2_COL_INICIAL + 2; // 13
-        this.vigilante = new Vigilante(vigilanteFilaInicial, vigilanteColumnaInicial);
+        // Dos vigilantes dentro de la boveda 2, uno a cada lado: uno cerca de
+        // la entrada (izquierda) y otro cerca del tesoro (derecha). Empiezan
+        // quietos hasta que Lupin entra a la boveda 2.
+        int filaVig = ConstructorMapa.BOVEDA2_FILA_INICIAL + 1;          // 3
+        int colVigIzq = ConstructorMapa.BOVEDA2_COL_INICIAL + 1;         // 12
+        int colVigDer = ConstructorMapa.TOTAL_COLUMNAS - 2;             // 19
+        this.vigilantesInicial = new int[][]{
+                {filaVig, colVigIzq}, // (3,12) lado izquierdo
+                {filaVig, colVigDer}  // (3,19) lado derecho
+        };
+        this.vigilantes = List.of(
+                new Vigilante(vigilantesInicial[0][0], vigilantesInicial[0][1]),
+                new Vigilante(vigilantesInicial[1][0], vigilantesInicial[1][1])
+        );
     }
 
     public Tablero getTablero() {
@@ -77,8 +86,8 @@ public class JuegoLupin {
         return llaves;
     }
 
-    public Vigilante getVigilante() {
-        return vigilante;
+    public List<Vigilante> getVigilantes() {
+        return vigilantes;
     }
 
 
@@ -87,18 +96,27 @@ public class JuegoLupin {
     }
 
     /**
-     * Activa el vigilante si Lupin ya entro a la boveda 2 (una sola vez).
+     * Activa los vigilantes si Lupin ya entro a la boveda 2.
      */
     public void activarVigilante() {
-        if (!vigilante.estaActivo() && lupinEnBoveda2()) {
-            vigilante.activar();
+        if (lupinEnBoveda2()) {
+            for (Vigilante v : vigilantes) {
+                if (!v.estaActivo()) {
+                    v.activar();
+                }
+            }
         }
     }
 
-    /** True si el vigilante esta en la misma casilla que Lupin (lo atrapo). */
+    /** True si algun vigilante esta en la misma casilla que Lupin (lo atrapo). */
     public boolean vigilanteAtrapoALupin() {
-        return vigilante.getFila() == lupin.getFila()
-                && vigilante.getColumna() == lupin.getColumna();
+        for (Vigilante v : vigilantes) {
+            if (v.getFila() == lupin.getFila()
+                    && v.getColumna() == lupin.getColumna()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** True si Lupin llego al tesoro (gano el juego). */
@@ -156,10 +174,12 @@ public class JuegoLupin {
         for (int i = 0; i < perros.size(); i++) {
             perros.get(i).reubicar(perrosInicial[i][0], perrosInicial[i][1]);
         }
-        // El vigilante vuelve a su sitio y se desactiva: Lupin regresa a la
-        // boveda 1, asi que el vigilante vuelve a quedar quieto.
-        vigilante.reubicar(vigilanteFilaInicial, vigilanteColumnaInicial);
-        vigilante.desactivar();
+        // Los vigilantes vuelven a su sitio y se desactivan: Lupin regresa a
+        // la boveda 1, asi que vuelven a quedar quietos.
+        for (int i = 0; i < vigilantes.size(); i++) {
+            vigilantes.get(i).reubicar(vigilantesInicial[i][0], vigilantesInicial[i][1]);
+            vigilantes.get(i).desactivar();
+        }
     }
 
     /**
