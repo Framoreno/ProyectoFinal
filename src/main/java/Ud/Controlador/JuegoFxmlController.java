@@ -92,7 +92,6 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
         Platform.exit();
     }
 
-    /** Lupin llego al tesoro: guarda el resultado, muestra que gano y cierra. */
     @Override
     public void alGanar() {
         guardarResultado("GANO", juego.getVidas());
@@ -104,10 +103,6 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
         Platform.exit();
     }
 
-    /**
-     * Guarda el resultado de la partida en el archivo de texto. Si falla la
-     * escritura, avisa con una alerta pero no interrumpe el cierre.
-     */
     private void guardarResultado(String resultado, int vidas) {
         try {
             repositorio.guardar(nombreJugador, resultado, vidas);
@@ -120,7 +115,6 @@ public class JuegoFxmlController implements ControladorJuego.ObservadorJuego {
         }
     }
 
-    /** Muestra las vidas actuales de Lupin en el texto de arriba. */
     private void mostrarVidas() {
         etiquetaVidas.setText("Vidas: " + juego.getVidas());
     }

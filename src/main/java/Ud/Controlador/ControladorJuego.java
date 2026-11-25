@@ -80,7 +80,7 @@ public class ControladorJuego {
                     juego.getTablero(),
                     periodo,
                     candado,
-                    // hace que la vista epere al modelo
+                    // hace que la vista espere al modelo
                     () -> Platform.runLater(() -> {
                         vista.dibujarPerros(perros);
                         verificarAtrapada();

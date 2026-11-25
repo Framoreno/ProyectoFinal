@@ -1,17 +1,8 @@
 package Ud.Modelo;
 
-/**
- * Reloj INDEPENDIENTE del vigilante: su propio hilo (concurrencia). En cada
- * tic, el vigilante persigue a Lupin un paso. Igual que los relojes de los
- * perros, no sabe dibujar: recibe una accion "alMoverse" que ejecuta tras
- * cada paso (normalmente, redibujar en la UI).
- *
- * El vigilante solo se mueve si esta activo (Lupin ya entro a la boveda 2);
- * mientras no lo este, el reloj sigue corriendo pero el vigilante no se mueve.
- */
 public class RelojVigilante implements Runnable {
 
-    /** Accion a ejecutar despues de cada paso. */
+
     public interface AlMoverse {
         void ejecutar();
     }

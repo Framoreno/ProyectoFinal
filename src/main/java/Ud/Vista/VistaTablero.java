@@ -21,7 +21,6 @@ import java.util.Map;
 /**
  * vista del juego
  * dibujar el estado del modelo en pantalla
- * pinta la grilla del tablero y coloca el sprite de Lupin en su casilla
  */
 public class VistaTablero extends GridPane {
 
@@ -51,8 +50,8 @@ public class VistaTablero extends GridPane {
         return vista;
     }
 
-    private static final Color COLOR_PARED = Color.web("#6b4226");  // cafe
-    private static final Color COLOR_PUERTA = Color.web("#c9a227"); // dorado
+    private static final Color COLOR_PARED = Color.web("#6b4226");
+    private static final Color COLOR_PUERTA = Color.web("#c9a227");
     private static final Color COLOR_LIBRE_CLARA = Color.web("#3b3b55");
     private static final Color COLOR_LIBRE_OSCURA = Color.web("#2a2a3d");
 

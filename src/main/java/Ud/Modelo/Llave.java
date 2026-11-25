@@ -1,12 +1,6 @@
 package Ud.Modelo;
 
-/**
- * Una llave que el ladron debe recoger. Ocupa una casilla del tablero.
- *
- * Es un elemento del mapa, no un Personaje (no se mueve), pero implementa
- * Posicionable para que la vista la pueda ubicar y dibujar igual que a los
- * demas (SOLID: la vista depende de una interfaz pequena, no de la clase).
- */
+
 public class Llave implements Posicionable {
 
     public static final char SIMBOLO = 'K';
