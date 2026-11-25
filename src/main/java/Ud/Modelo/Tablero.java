@@ -1,17 +1,10 @@
 package Ud.Modelo;
 
 /**
- * Clase Tablero (segun el modelo del docente): conoce su tamano en filas y
- * columnas, y ahora tambien de que tipo es cada casilla (libre, pared, puerta
+ * Clase Tablero : conoce su tamano en filas y
+ * columnas, y  de que tipo es cada casilla (libre, pared, puerta
  * o tesoro).
- *
- * Unica responsabilidad: representar la grilla del juego (principio de
- * responsabilidad unica, SOLID). No sabe dibujar ni leer el teclado; de eso se
- * encargan la Vista y el Controlador.
- *
- * Se preserva el comportamiento anterior: getFilas, getColumnas y estaDentro
- * siguen funcionando igual. Al crearse, todas las casillas son LIBRE; quien
- * arma el mapa decide las paredes, la puerta y el tesoro con setTipo.
+
  */
 public class Tablero {
 

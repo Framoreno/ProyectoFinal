@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class RelojPerro implements Runnable {
 
-    /** Accion a ejecutar despues de cada movimiento (p. ej. redibujar). */
+  
     public interface AlMoverse {
         void ejecutar();
     }
@@ -29,15 +29,7 @@ public class RelojPerro implements Runnable {
     private volatile boolean activo = true;
     private Thread hilo;
 
-    /**
-     * @param perro          perro que mueve este reloj.
-     * @param todosLosPerros todos los perros (para que no se pisen entre si).
-     * @param tablero        tablero sobre el que se mueve.
-     * @param periodoMs      cada cuantos milisegundos da un paso (su velocidad).
-     * @param candado        objeto compartido para sincronizar el paso de todos
-     *                       los perros y evitar choques entre hilos.
-     * @param alMoverse      accion tras cada paso (normalmente, redibujar).
-     */
+
     public RelojPerro(Perro perro, List<Perro> todosLosPerros, Tablero tablero,
                       long periodoMs, Object candado, AlMoverse alMoverse) {
         this.perro = perro;
@@ -51,7 +43,7 @@ public class RelojPerro implements Runnable {
     /** Arranca el hilo de este reloj. */
     public void iniciar() {
         hilo = new Thread(this, "reloj-perro");
-        hilo.setDaemon(true); // no impide cerrar la aplicacion
+        hilo.setDaemon(true); 
         hilo.start();
     }
 

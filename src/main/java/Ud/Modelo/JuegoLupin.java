@@ -52,8 +52,7 @@ public class JuegoLupin {
                 new Perro(perrosInicial[1][0], perrosInicial[1][1]),
                 new Perro(perrosInicial[2][0], perrosInicial[2][1])
         );
-        // Tres llaves en posiciones aleatorias de la boveda 1 (cambian en cada
-        // arranque).
+
         this.llaves = colocarLlavesAlAzar();
 
         // Vigilante dentro de la boveda 2, cerca de la entrada. Empieza quieto.
@@ -82,10 +81,7 @@ public class JuegoLupin {
         return vigilante;
     }
 
-    /**
-     * Indica si Lupin esta en la boveda 2 (columnas a la derecha de la
-     * columna separadora).
-     */
+
     public boolean lupinEnBoveda2() {
         return lupin.getColumna() > ConstructorMapa.COLUMNA_SEPARADORA;
     }
@@ -93,7 +89,7 @@ public class JuegoLupin {
     /**
      * Activa el vigilante si Lupin ya entro a la boveda 2 (una sola vez).
      */
-    public void activarVigilanteSiCorresponde() {
+    public void activarVigilante() {
         if (!vigilante.estaActivo() && lupinEnBoveda2()) {
             vigilante.activar();
         }
@@ -175,7 +171,7 @@ public class JuegoLupin {
      */
     private List<Llave> colocarLlavesAlAzar() {
         List<int[]> libres = casillasLibresBoveda1();
-        Collections.shuffle(libres); // orden aleatorio: distinto cada arranque
+        Collections.shuffle(libres);
 
         List<Llave> elegidas = new ArrayList<>();
         for (int[] celda : libres) {

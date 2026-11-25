@@ -57,7 +57,7 @@ public final class ConstructorMapa {
     public static Tablero construir() {
         Tablero tablero = new Tablero(ALTO, TOTAL_COLUMNAS);
         pintarParedesBoveda1(tablero);
-        pintarParedSeparadoraConPuerta(tablero);
+        pintarPuerta(tablero);
         pintarBoveda2(tablero);
         abrirCasillasIndicadas(tablero);
         return tablero;
@@ -108,7 +108,7 @@ public final class ConstructorMapa {
      * La columna entre las dos bovedas es una pared SIMPLE (una sola columna),
      * menos la casilla puerta.
      */
-    private static void pintarParedSeparadoraConPuerta(Tablero tablero) {
+    private static void pintarPuerta(Tablero tablero) {
         for (int fila = 0; fila < ALTO; fila++) {
             tablero.setTipo(fila, COLUMNA_SEPARADORA, TipoCasilla.PARED);
         }
