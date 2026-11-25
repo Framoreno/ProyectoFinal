@@ -13,43 +13,21 @@ import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Controlador del juego (capa Controlador del patron MVC).
- *
- * Une el teclado y los relojes de los perros con el modelo y la vista:
- *  - lee la tecla que oprime el jugador y mueve a Lupin;
- *  - arranca un reloj independiente por cada perro (cada uno con su propia
- *    velocidad) y, cuando un perro se mueve, pide a la vista redibujar;
- *  - detecta cuando un perro atrapa a Lupin: detiene los relojes, avisa para
- *    mostrar la alerta, resta una vida, reinicia posiciones y vuelve a arrancar
- *    (o termina si ya no quedan vidas).
- *
- * No conoce colores ni sprites (eso es de la Vista) ni calcula movimientos
- * (eso es del Modelo): solo coordina.
- */
 public class ControladorJuego {
 
-    /**
-     * Aviso hacia la capa de presentacion cuando Lupin es atrapado o el juego
-     * termina. Lo implementa el controlador FXML (muestra la alerta y refresca
-     * el texto de vidas). Mantiene a este controlador sin depender de JavaFX
-     * para la ventana (SOLID).
-     */
+    // Interfaz que la vista implementa para reaccionar a los eventos del juego.
     public interface ObservadorJuego {
-        /** Lupin fue atrapado y aun le quedan vidas. */
+        // Se invoca cuando un perro atrapa al jugador; indica las vidas que le quedan.
         void alSerAtrapado(int vidasRestantes);
 
-        /** Lupin se quedo sin vidas: fin del juego. */
+        // Se invoca cuando la partida termina (sin vidas restantes).
         void alTerminarJuego();
 
-        /** Lupin llego al tesoro: gano el juego. */
+        // Se invoca cuando el jugador cumple la condicion de victoria.
         void alGanar();
     }
 
-    // Cada perro se mueve a un tiempo distinto (milisegundos entre pasos).
     private static final long[] PERIODOS_MS = {500, 800, 1200};
-    // Velocidad del vigilante (milisegundos entre pasos). Mas bajo = mas rapido.
     private static final long PERIODO_VIGILANTE_MS = 450;
 
     private final JuegoLupin juego;
